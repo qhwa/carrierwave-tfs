@@ -31,9 +31,7 @@ module CarrierWave
         end
 
         def path
-          names = @path.split("/").last.split("_")
-          version = names.length == 1 ? "" : names.first
-          version = "_#{version}" if !version.blank?
+          version = "_#{@uploader.version_name}" if !@uploader.version_name.blank?
           field_name = "#{@uploader.mounted_as}#{version}_file_name"
           if @uploader.model.respond_to?(field_name)
             @uploader.model.send(field_name)

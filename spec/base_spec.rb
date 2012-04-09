@@ -42,7 +42,7 @@ describe "Upload" do
   end
   
   it "should save" do
-    f = File.open("spec/fixtures/big.jpg")
+    f = File.open("spec/fixtures/a_big.jpg")
     @photo = Photo.create(:image => f)
     puts "----- #{@photo.inspect}"
     @photo.id.should_not == nil
