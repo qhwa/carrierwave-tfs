@@ -31,31 +31,36 @@ module CarrierWave
         end
 
         def path
-          @path
+          names = @path.split("/").last.split("_")
+          value = names.length == 1 ? "" : names.first
+          version = "_#{version}" if !version.blank?
+          field_name = "#{@uploader.mounted_as}#{version}_file_name"
+          @uploader.model.send(field_name)
         end
 
         def url
           if @uploader.tfs_cdn_domains
             domain = @uploader.tfs_cdn_domains[rand(@uploader.tfs_cdn_domains.count)]
-            ["http://",[domain, @path].join('/').squeeze("/")].join("")
+            ["http://",[domain, self.path].join('/').squeeze("/")].join("")
           else
             nil
           end
         end
 
         def read
-          tfs.get(@path)
+          tfs.get(self.path)
         end
 
         def write(file)
           ext = file.path.split(".").last
 					filename = tfs.put(file.path, :ext => ext)
 					@path = [@uploader.tfs_bucket,[filename,ext].join(".")].join("/")
+          @uploader.file_name = @path
 					@path
         end
 
         def delete
-          tfs.rm(@path)
+          # tfs.rm(@path)
         end
 
         def content_type
@@ -93,8 +98,7 @@ module CarrierWave
       #
       def store!(file)
         stored = CarrierWave::Storage::TFS::File.new(uploader, uploader.store_path)
-        path = stored.write(file)
-        uploader.file_name = path
+        stored.write(file)
         stored
       end
 

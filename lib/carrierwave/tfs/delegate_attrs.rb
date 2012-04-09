@@ -5,26 +5,25 @@ module CarrierWave
     
       module ClassMethods
         def store_file_name_delegate_attr(attribute, default = nil)
-          attr_accessor attribute
+          # attr_accessor attribute
 
-          before :remove, :"reset_#{attribute}"
+          # before :remove, :"reset_#{attribute}"
 
           var_name = :"@#{attribute}"
 
-          define_method :"#{attribute}" do
-            model_accessor = store_file_name_getter_name(attribute)
-            value = instance_variable_get(var_name)
-            value ||= self.model.send(model_accessor) if self.model.present? && self.model.respond_to?(model_accessor)
-            value ||= default
-            instance_variable_set(var_name, value)
-          end
+          # define_method :"#{attribute}" do
+          #   model_accessor = store_file_name_getter_name(attribute)
+          #   value = instance_variable_get(var_name)
+          #   value ||= self.model.send(model_accessor) if self.model.present? && self.model.respond_to?(model_accessor)
+          #   value ||= default
+          #   instance_variable_set(var_name, value)
+          # end
 
           define_method :"#{attribute}=" do |value|
-            model_accessor = store_file_name_getter_name(attribute)
-            instance_variable_set(var_name, value)
-            if self.model.present? && self.model.respond_to?(:"#{model_accessor}=") && !self.model.destroyed?
-              self.model.send(:"#{model_accessor}=", value) 
-            end
+            model_accessor = store_file_name_getter_name(attribute)     
+            puts "--- #{self.model.send(:id)}"    
+            self.model.send(:"#{model_accessor}=", value) 
+            # instance_variable_set(model_accessor, value)
           end
 
           define_method :"reset_#{attribute}" do

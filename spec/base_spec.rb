@@ -44,8 +44,12 @@ describe "Upload" do
   it "should save" do
     f = File.open("spec/fixtures/big.jpg")
     @photo = Photo.create(:image => f)
-    @photo.id.should_not == nil
     puts "----- #{@photo.inspect}"
+    @photo.id.should_not == nil
+    @photo = Photo.find(@photo.id)
+    puts "----- #{@photo.inspect}"
+    puts "----- #{@photo.image.path}"
+    puts "----- #{@photo.image.small.path}"
     puts "----- #{@photo.image.url}"
     puts "----- #{@photo.image.small.url}"
     @photo.image_file_name.length.should_not == ""

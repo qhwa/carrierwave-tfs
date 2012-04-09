@@ -15,7 +15,6 @@ This gem adds support for Taobao [TFS](http://code.taobao.org/project/view/366/)
 
 创建 `config/initializes/carrierwave.rb`
 
-    require "carrierwave/tfs"
     CarrierWave.configure do |config|
       config.storage = :tfs
       # 如果想在没有安装 TFS 的环境使用，请将这个设成 true，这样就会模拟 TFS 以文件方式存储
