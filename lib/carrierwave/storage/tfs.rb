@@ -32,7 +32,7 @@ module CarrierWave
 
         def path
           names = @path.split("/").last.split("_")
-          value = names.length == 1 ? "" : names.first
+          version = names.length == 1 ? "" : names.first
           version = "_#{version}" if !version.blank?
           field_name = "#{@uploader.mounted_as}#{version}_file_name"
           @uploader.model.send(field_name)
@@ -53,7 +53,7 @@ module CarrierWave
 
         def write(file)
           ext = file.path.split(".").last
-					filename = tfs.put(file.path, :ext => ext)
+					filename = tfs.put(file.path, :ext => ".#{ext}")
 					@path = [@uploader.tfs_bucket,[filename,ext].join(".")].join("/")
           @uploader.file_name = @path
 					@path
