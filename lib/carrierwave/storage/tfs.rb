@@ -35,7 +35,11 @@ module CarrierWave
           version = names.length == 1 ? "" : names.first
           version = "_#{version}" if !version.blank?
           field_name = "#{@uploader.mounted_as}#{version}_file_name"
-          @uploader.model.send(field_name)
+          if @uploader.model.respond_to?(field_name)
+            @uploader.model.send(field_name)
+          else
+            nil
+          end 
         end
 
         def url

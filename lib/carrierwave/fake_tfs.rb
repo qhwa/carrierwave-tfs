@@ -12,7 +12,7 @@ module CarrierWave
       def put(file_path, options = {})
         ext = options[:ext] || File.extname(file_path)
         ext = ".jpg" if ext.blank?
-        file_name = [Digest::SHA1.hexdigest(file_path),ext].join("")
+        file_name = ["T1_",Digest::SHA1.hexdigest(file_path),ext].join("")
 
         new_path = [@ns_addr,file_name].join("/")
 
