@@ -23,10 +23,8 @@ describe "Upload" do
   class PhotoUploader < CarrierWave::Uploader::Base
     include CarrierWave::MiniMagick
 
-    # process :store_file_name
     version :small do
       process :resize_to_fill => [120, 120]
-      # process :store_file_name
     end
   end
 
