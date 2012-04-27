@@ -4,8 +4,10 @@ module CarrierWave
     module Configuration
       extend ActiveSupport::Concern
       included do
-        add_config :tfs_host
-        add_config :tfs_port
+        # TFS 服务器地址 / WebService 地址，如: 127.0.0.1:6666 或 http://api.tbcdn.com/tfs
+        add_config :tfs_ns_addr
+        # WebService 连接需要的 AppKey, 如果是用 tbfstool 来上传就不需要配置这个
+        add_config :tfs_web_service_app_key
         # TFS bin 文件路径
         add_config :tfs_tool_path
         # 数组格式，用于多个域名循环使用

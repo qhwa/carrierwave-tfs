@@ -1,5 +1,4 @@
 require "carrierwave/storage/tfs"
-require "carrierwave/fake_tfs"
 require "carrierwave/tfs/store_file_name"
 require "carrierwave/tfs/delegate_attrs"
 require "carrierwave/tfs/configuration"

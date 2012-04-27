@@ -77,12 +77,9 @@ module CarrierWave
       protected
 
         def tfs 
-          if @uploader.tfs_not_installed
-            $tfs ||= FakeTfs::Client.new(:ns_addr => @uploader.tfs_host)
-          else
-            @tfs ||= RTFS::Client.new(:ns_addr => [@uploader.tfs_host,@uploader.tfs_port].join(":"),
+          @tfs ||= RTFS::Client.tfs(:ns_addr => @uploader.tfs_ns_addr,
+                                    :appkey => @uploader.tfs_web_service_app_key,
                                     :tfstool_path => @uploader.tfs_tool_path)
-          end
         end
 
       end

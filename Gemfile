@@ -8,5 +8,5 @@ group :test do
   gem 'mini_magick'
   gem 'rest-client'
   gem 'mocha','0.10.0'
-  gem "rtfs"
+  gem "rtfs", "0.1.0"
 end

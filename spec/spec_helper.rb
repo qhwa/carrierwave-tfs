@@ -23,11 +23,10 @@ end
 
 CarrierWave.configure do |config|
   config.storage = :tfs
-  config.tfs_host = [Rails.root,"uploads"].join("/")
-  # config.tfs_port = "3100"
-  config.tfs_tool_path = ""
+  config.tfs_ns_addr = "http://10.232.4.44:3900"
+  config.tfs_web_service_app_key = "4f8fbb734d4d8"
   config.tfs_bucket = "tfscom"
-  config.tfs_cdn_domains = %w(img03.taobaocdn.com img02.taobaocdn.com img01.taobaocdn.com img04.taobaocdn.com)
+  config.tfs_cdn_domains = %w(10.232.4.42)
   config.tfs_not_installed = true
 end
 
