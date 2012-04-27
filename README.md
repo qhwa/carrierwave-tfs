@@ -15,18 +15,24 @@ This gem adds support for Taobao [TFS](http://code.taobao.org/project/view/366/)
 
 创建 `config/initializes/carrierwave.rb`
 
+
     CarrierWave.configure do |config|
       config.storage = :tfs
-      # 如果想在没有安装 TFS 的环境使用，请将这个设成 true，这样就会模拟 TFS 以文件方式存储
-      config.tfs_not_installed = false
-      ＃ 服务器，如果 tfs_not_installed 的话，请设置成一个目录地址
-      config.tfs_host = "your-host.com"
-      # 服务器端口
-      config.tfs_port = "27017"
+
+      # == Begin 下面有两种配置方式，（TFS 客户端 或 WebService)
+      
+      # 客户端
+      config.tfs_ns_addr = "127.0.0.1:27017"
+      config.tfs_tool_path = "/usr/bin/tfstool"
+
+      # WebService
+      config.tfs_ns_addr = "http://127.0.0.1:3900"
+      config.tfs_web_service_app_key = "Kshj*&2kj1"
+
       # 二级目录
       config.tfs_bucket = "tfscom"
       # TFS bin 文件地址, 默认 /home/admin/tfs/bin/tfstool
-      config.tfs_tool_path = "/usr/bin/tfstool"
+      
       # 域名
       config.tfs_cdn_domains = ["img01.tfscdn.com","img02.tfscdn.com"]
     end
