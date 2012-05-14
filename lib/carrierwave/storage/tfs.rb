@@ -41,7 +41,9 @@ module CarrierWave
         end
 
         def url
-          if @uploader.tfs_cdn_domains
+          if self.path.nil? && @uploader.respond_to?('default_url')
+            @uploader.default_url
+          elsif @uploader.tfs_cdn_domains
             domain = @uploader.tfs_cdn_domains[rand(@uploader.tfs_cdn_domains.count)]
             ["http://",[domain, self.path].join('/').squeeze("/")].join("")
           else
