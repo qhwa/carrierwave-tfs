@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "carrierwave-tfs"
-  s.version     = "0.2.0"
+  s.version     = "0.2.1"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Jason Lee","Nowa Zhu"]
   s.email       = ["huacnlee@gmail.com","nowazhu@gmail.com"]
