@@ -9,8 +9,7 @@ module CarrierWave
           var_name = :"@#{attribute}"
 
           define_method :"#{attribute}=" do |value|
-            model_accessor = store_file_name_getter_name(attribute)     
-            puts "--- #{self.model.send(:id)}"    
+            model_accessor = store_file_name_getter_name(attribute)
             self.model.send(:"#{model_accessor}=", value) 
           end
         end
