@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>carrierwave-tfs by huacnlee</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>carrierwave-tfs</h1>
+        <p>Taobao TFS uploader with CarrierWave for Ruby Application</p>
+
+        <p class="view"><a href="https://github.com/huacnlee/carrierwave-tfs">View the Project on GitHub <small>huacnlee/carrierwave-tfs</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/huacnlee/carrierwave-tfs/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/huacnlee/carrierwave-tfs/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/huacnlee/carrierwave-tfs">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>CarrierWave for TFS</h1>
+
+<p>This gem adds support for Taobao <a href="http://code.taobao.org/project/view/366/">TFS</a> to <a href="https://github.com/jnicklas/carrierwave/">CarrierWave</a></p>
+
+<h2>Installation</h2>
+
+<div class="highlight"><pre><span class="n">gem</span> <span class="n">install</span> <span class="n">carrierwave</span><span class="o">-</span><span class="n">tfs</span>
+</pre></div>
+
+<h2>Using Bundler</h2>
+
+<div class="highlight"><pre><span class="n">gem</span> <span class="s1">'rtfs'</span>
+<span class="n">gem</span> <span class="s1">'carrierwave-tfs'</span>
+</pre></div>
+
+<h2>Configuration</h2>
+
+<p>创建 <code>config/initializes/carrierwave.rb</code></p>
+
+<div class="highlight"><pre><span class="no">CarrierWave</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="ss">:tfs</span>
+
+  <span class="c1"># == Begin 下面有两种配置方式，（TFS 客户端 或 WebService)</span>
+
+  <span class="c1"># 客户端</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">tfs_ns_addr</span> <span class="o">=</span> <span class="s2">"127.0.0.1:27017"</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">tfs_tool_path</span> <span class="o">=</span> <span class="s2">"/usr/bin/tfstool"</span>
+
+  <span class="c1"># WebService</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">tfs_ns_addr</span> <span class="o">=</span> <span class="s2">"http://127.0.0.1:3900"</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">tfs_web_service_app_key</span> <span class="o">=</span> <span class="s2">"Kshj*&amp;2kj1"</span>
+
+  <span class="c1"># 二级目录</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">tfs_bucket</span> <span class="o">=</span> <span class="s2">"tfscom"</span>
+  <span class="c1"># TFS bin 文件地址, 默认 /home/admin/tfs/bin/tfstool</span>
+
+  <span class="c1"># 域名</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">tfs_cdn_domains</span> <span class="o">=</span> <span class="o">[</span><span class="s2">"img01.tfscdn.com"</span><span class="p">,</span><span class="s2">"img02.tfscdn.com"</span><span class="o">]</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>上面的配置返回的地址格式将会是这样: <code>http://img01.tfscdn.com/tfscom/d5b5c2c676e59eb005436cd50eecce8dd4635066.jpg</code></p>
+
+<h2>关于 Model 里面</h2>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">AvatarUploader</span> <span class="o">&lt;</span> <span class="no">CarrierWave</span><span class="o">::</span><span class="no">Uploader</span><span class="o">::</span><span class="no">Base</span>
+  <span class="kp">include</span> <span class="no">CarrierWave</span><span class="o">::</span><span class="no">MiniMagick</span>
+
+  <span class="n">version</span> <span class="ss">:normal</span> <span class="k">do</span>
+    <span class="n">process</span> <span class="ss">:resize_to_fill</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="o">]</span>
+  <span class="k">end</span>
+
+  <span class="n">version</span> <span class="ss">:small</span> <span class="k">do</span>
+    <span class="n">process</span> <span class="ss">:resize_to_fill</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">15</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">User</span>
+  <span class="kp">include</span> <span class="no">Mongoid</span><span class="o">::</span><span class="no">Document</span>
+
+  <span class="c1"># 需要单独定义几个字段用来存放文件地址，字段个数与 Uploader 的 version 对应,因为 TFS 每个文件名是不同的</span>
+  <span class="n">field</span> <span class="ss">:avatar_file_name</span>
+  <span class="n">field</span> <span class="ss">:avatar_normal_file_name</span>
+  <span class="n">field</span> <span class="ss">:avatar_small_file_name</span>
+
+  <span class="n">mount_uploader</span> <span class="ss">:avatar</span><span class="p">,</span> <span class="no">AvatarUploader</span>
+<span class="k">end</span>
+</pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/huacnlee">huacnlee</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-9745660-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
