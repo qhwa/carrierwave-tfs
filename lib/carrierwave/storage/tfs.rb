@@ -47,7 +47,7 @@ module CarrierWave
             domain = @uploader.tfs_cdn_domains[rand(@uploader.tfs_cdn_domains.count)]
             if(self.path.split("/").last.index("L") == 0)
               #大文件
-              ["http://",[@uploader.big_file_url, self.path].join('/').squeeze("/")].join("")
+              ["http://",@uploader.big_file_url,"/L0/",self.path.split("/").last].join("")
             else
               ["http://",[domain, self.path].join('/').squeeze("/")].join("")
             end
