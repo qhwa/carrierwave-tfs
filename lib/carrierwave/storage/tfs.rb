@@ -24,7 +24,7 @@ module CarrierWave
     class TFS < Abstract
 
       class File
-        
+
         def initialize(uploader, path)
           @path = path
           @uploader = uploader
@@ -37,7 +37,7 @@ module CarrierWave
             @uploader.model.send(field_name)
           else
             nil
-          end 
+          end
         end
 
         def url
@@ -45,7 +45,12 @@ module CarrierWave
             @uploader.default_url
           elsif @uploader.tfs_cdn_domains
             domain = @uploader.tfs_cdn_domains[rand(@uploader.tfs_cdn_domains.count)]
-            ["http://",[domain, self.path].join('/').squeeze("/")].join("")
+            if(self.path.split("/").last.index("L") == 0)
+              #大文件
+              ["http://",@uploader.big_file_url,"/L0/",self.path.split("/").last].join("")
+            else
+              ["http://",[domain, self.path].join('/').squeeze("/")].join("")
+            end
           else
             nil
           end
@@ -58,7 +63,13 @@ module CarrierWave
         def write(file)
           ext = file.path.split(".").last
 					filename = tfs.put(file.path, :ext => ".#{ext}")
+
 					@path = [@uploader.tfs_bucket,[filename,ext].join(".")].join("/")
+
+          if(filename.index("L") == 0 && @uploader.big_file_url)
+            #大文件
+            @path = ["L0",[filename,ext].join(".")].join("/")
+          end
           @uploader.file_name = @path
 					@path
         end
@@ -78,7 +89,7 @@ module CarrierWave
 
       protected
 
-        def tfs 
+        def tfs
           @tfs ||= RTFS::Client.tfs(:ns_addr => @uploader.tfs_ns_addr,
                                     :appkey => @uploader.tfs_web_service_app_key,
                                     :tfstool_path => @uploader.tfs_tool_path)

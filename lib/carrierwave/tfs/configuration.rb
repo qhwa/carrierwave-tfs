@@ -16,9 +16,12 @@ module CarrierWave
         add_config :tfs_bucket
         # 如果想在没有安装 TFS 的环境使用，请将这个设成 true，这样就会模拟 TFS 以文件方式存储
         add_config :tfs_not_installed
+
+        #大文件url
+        add_config :big_file_url
       end
     end
-    
+
     module ClassMethods
       def add_config(name)
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -39,8 +42,7 @@ module CarrierWave
             value.instance_of?(Proc) ? value.call : value
           end
         RUBY
-      end   
+      end
     end
   end
 end
-      
