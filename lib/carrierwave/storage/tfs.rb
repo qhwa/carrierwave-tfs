@@ -45,7 +45,12 @@ module CarrierWave
             @uploader.default_url
           elsif @uploader.tfs_cdn_domains
             domain = @uploader.tfs_cdn_domains[rand(@uploader.tfs_cdn_domains.count)]
-            ["http://",[domain, self.path].join('/').squeeze("/")].join("")
+            if(self.path.split("/").last.index("L") == 0)
+              #大文件
+              ["http://",[@uploader.big_file_url, self.path].join('/').squeeze("/")].join("")
+            else
+              ["http://",[domain, self.path].join('/').squeeze("/")].join("")
+            end
           else
             nil
           end
@@ -58,12 +63,12 @@ module CarrierWave
         def write(file)
           ext = file.path.split(".").last
 					filename = tfs.put(file.path, :ext => ".#{ext}")
-          if(filename.indexOf("T") == 0)
-            # 小文件
-					  @path = [@uploader.tfs_bucket,[filename,ext].join(".")].join("/")
-          else
+
+					@path = [@uploader.tfs_bucket,[filename,ext].join(".")].join("/")
+
+          if(filename.index("L") == 0 && @uploader.big_file_url)
             #大文件
-            @path = "http://d.taobaocdn.com/L0/#{filename}.#{ext}"
+            @path = ["L0",[filename,ext].join(".")].join("/")
           end
           @uploader.file_name = @path
 					@path
