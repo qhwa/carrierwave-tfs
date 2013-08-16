@@ -25,29 +25,30 @@ module CarrierWave
 
       class File
 
+        attr_reader :uploader
+
         def initialize(uploader, path)
-          @path = path
-          @uploader = uploader
+          @uploader, @path = uploader, path
         end
 
         def path
-          version = "_#{@uploader.version_name}" if !@uploader.version_name.blank?
-          field_name = "#{@uploader.mounted_as}#{version}_file_name"
-          if @uploader.model.respond_to?(field_name)
-            @uploader.model.send(field_name)
+          version = "_#{uploader.version_name}" if !uploader.version_name.blank?
+          field_name = "#{uploader.mounted_as}#{version}_file_name"
+          if uploader.model.respond_to?(field_name)
+            uploader.model.send(field_name)
           else
             nil
           end
         end
 
         def url
-          if self.path.nil? && @uploader.respond_to?('default_url')
-            @uploader.default_url
-          elsif @uploader.tfs_cdn_domains
-            domain = @uploader.tfs_cdn_domains[rand(@uploader.tfs_cdn_domains.count)]
+          if self.path.nil? && uploader.respond_to?('default_url')
+            uploader.default_url
+          elsif uploader.tfs_cdn_domains
+            domain = uploader.tfs_cdn_domains[rand(uploader.tfs_cdn_domains.count)]
             if(self.path.split("/").last.index("L") == 0)
               #大文件
-              ["http://",@uploader.big_file_url,"/L0/",self.path.split("/").last].join("")
+              ["http://",uploader.big_file_url,"/L0/",self.path.split("/").last].join("")
             else
               ["http://",[domain, self.path].join('/').squeeze("/")].join("")
             end
@@ -61,17 +62,17 @@ module CarrierWave
         end
 
         def write(file)
-          ext = file.path.split(".").last
-					filename = tfs.put(file.path, :ext => ".#{ext}")
+          ext = uploader.store_path.split(".").last
+          filename = tfs.put(file.path, :ext => ".#{ext}")
 
-					@path = [@uploader.tfs_bucket,[filename,ext].join(".")].join("/")
+          @path = [uploader.tfs_bucket,[filename,ext].join(".")].join("/")
 
-          if(filename.index("L") == 0 && @uploader.big_file_url)
+          if(filename.index("L") == 0 && uploader.big_file_url)
             #大文件
             @path = ["L0",[filename,ext].join(".")].join("/")
           end
-          @uploader.file_name = @path
-					@path
+          uploader.file_name = @path
+          @path
         end
 
         def delete
@@ -90,9 +91,9 @@ module CarrierWave
       protected
 
         def tfs
-          @tfs ||= RTFS::Client.tfs(:ns_addr => @uploader.tfs_ns_addr,
-                                    :appkey => @uploader.tfs_web_service_app_key,
-                                    :tfstool_path => @uploader.tfs_tool_path)
+          @tfs ||= RTFS::Client.tfs(:ns_addr => uploader.tfs_ns_addr,
+                                    :appkey => uploader.tfs_web_service_app_key,
+                                    :tfstool_path => uploader.tfs_tool_path)
         end
 
       end
