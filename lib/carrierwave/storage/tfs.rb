@@ -25,6 +25,8 @@ module CarrierWave
 
       class File
 
+        attr_reader :uploader
+
         def initialize(uploader, path)
           @path = path
           @uploader = uploader
@@ -61,17 +63,17 @@ module CarrierWave
         end
 
         def write(file)
-          ext = file.path.split(".").last
-					filename = tfs.put(file.path, :ext => ".#{ext}")
+          ext = uploader.store_path.split(".").last
+          filename = tfs.put(file.path, :ext => ".#{ext}")
 
-					@path = [@uploader.tfs_bucket,[filename,ext].join(".")].join("/")
+          @path = [@uploader.tfs_bucket,[filename,ext].join(".")].join("/")
 
           if(filename.index("L") == 0 && @uploader.big_file_url)
             #大文件
             @path = ["L0",[filename,ext].join(".")].join("/")
           end
           @uploader.file_name = @path
-					@path
+          @path
         end
 
         def delete
