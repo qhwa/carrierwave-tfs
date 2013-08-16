@@ -23,7 +23,7 @@ end
 
 CarrierWave.configure do |config|
   config.storage = :tfs
-  config.tfs_ns_addr = "http://10.232.4.44:3900"
+  config.tfs_ns_addr = "http://restful-store.daily.tbsite.net:3800"
   config.tfs_web_service_app_key = "4f8fbb734d4d8"
   config.tfs_bucket = "tfscom"
   config.tfs_cdn_domains = %w(10.232.4.42)
