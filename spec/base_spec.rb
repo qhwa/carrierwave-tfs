@@ -57,4 +57,21 @@ describe "Upload" do
     @photo.image_file_name.should_not == @photo.image_small_file_name
     
   end
+
+  it "should delete" do
+    File.open("spec/fixtures/a_big.jpg") do |f|
+      @photo = Photo.create(:image => f)
+      url = @photo.image.url
+      
+      # successly uploaded
+      url.should_not == nil
+      RestClient.get(url).should_not == nil
+
+      @photo.destroy!
+
+      expect {
+        RestClient.get(url)
+      }.to raise_error( RestClient::ResourceNotFound )
+    end
+  end
 end

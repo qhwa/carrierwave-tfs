@@ -76,7 +76,15 @@ module CarrierWave
         end
 
         def delete
-          # tfs.rm(@path)
+          tfs.rm( file_id ) if path
+        end
+
+        # 根据路径获取TFS的文件id
+        def file_id
+          # path格式: [bucket]/[tfs_file_id].[文件格式]
+          # 例如      "tfscom/Txadftegx234x.jpg"
+          # 我们需要的是中间的部分 (Txadftegx234x)
+          ::File.basename(path).sub /\.\w+$/, ''
         end
 
         def content_type
